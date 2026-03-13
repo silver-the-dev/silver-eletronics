@@ -8,7 +8,7 @@ public class Menu {
         DBOperations.create();
     }
     public static void listar() {
-        DBOperations.listColumns();
+        DBOperations.read();
     }
     public static void atualizar() {
         DBOperations.update();

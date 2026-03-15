@@ -1,8 +1,5 @@
 package com.silvereletronics.db;
 
-import com.silvereletronics.utils.DataInput;
-
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.*;
 
@@ -14,9 +11,9 @@ public class DBOperations {
     public static List<Map<Integer, List<Object>>> read(String database) {
         String sql = "SELECT * FROM " + database;
         List<Map<Integer, List<Object>>> result = new ArrayList<>();
-        try (Connection conn = DBConnect.getConnection()) {
+        try (Connection conn = DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet res = stmt.executeQuery();
+            ResultSet res = stmt.executeQuery()){
             ResultSetMetaData metaData = res.getMetaData();
 
             while (res.next()) {
@@ -30,7 +27,7 @@ public class DBOperations {
                 result.add(map);
             }
         } catch (SQLException e) {
-            System.out.println("Erroso: " + e.getMessage());
+            System.out.println("Erro 1: " + e.getMessage());
         }
         return result;
     }

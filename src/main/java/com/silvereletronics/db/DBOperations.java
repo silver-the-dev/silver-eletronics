@@ -40,27 +40,4 @@ public class DBOperations {
     public static void delete(){
 
     }
-    public static String selectTable() {
-        Map<Integer, String> tabelas = new HashMap<>();
-        int i = 1;
-        try(Connection conn = DBConnect.getConnection();){
-            System.out.println("Conectado");
-            DatabaseMetaData dbMD = conn.getMetaData();
-            String[] tipos = {"TABLE"};
-            try(ResultSet rs = dbMD.getTables(DBConnect.DB, null, "%", tipos)){
-                while (rs.next()){
-                    tabelas.put(i, rs.getString("TABLE_NAME"));
-                    System.out.println(i + " - " + rs.getString("TABLE_NAME"));
-                    i++;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        int valor = DataInput.IntegerInput(1, i-1);
-        System.out.println(tabelas.get(valor));
-        return tabelas.get(valor);
-    }
 }

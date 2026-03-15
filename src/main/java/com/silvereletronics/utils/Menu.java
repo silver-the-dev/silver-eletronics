@@ -2,13 +2,22 @@ package com.silvereletronics.utils;
 
 import com.silvereletronics.db.DBOperations;
 
+import java.util.List;
+import java.util.Map;
+
 public class Menu {
 
     public static void inserir() {
         DBOperations.create();
     }
-    public static void listar() {
-        DBOperations.read();
+    public static void listarValores() {
+        List<Map<Integer, List<Object>>> list = DBOperations.read("componentes");
+        System.out.printf("%-5s %-15s %-5s\n", "ID", "NOME", "QUANTIDADE");
+        for(Map<Integer, List<Object>> map : list){
+            for (Map.Entry<Integer, List<Object>> entry : map.entrySet()) {
+                System.out.printf("%-5s %-15s %-5s\n", entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
+            }
+        }
     }
     public static void atualizar() {
         DBOperations.update();
@@ -28,7 +37,7 @@ public class Menu {
         System.out.println("Opção: ");
         int opcao = DataInput.IntegerInput();
         if (opcao == 1) {
-            listar();
+
         } else if (opcao == 2) {
             inserir();
         } else if (opcao == 3) {

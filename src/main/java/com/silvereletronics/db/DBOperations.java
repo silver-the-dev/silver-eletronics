@@ -8,57 +8,31 @@ import java.util.*;
 
 public class DBOperations {
     public static void create(){
-        
-    }
-    public static void read(){
-        String sql = "SELECT * FROM ";
-        int columnCount = 0;
-        try(Connection conn = DBConnect.getConnection()){
-            sql = sql + selectTable();
 
+    }
+
+    public static List<Map<Integer, List<Object>>> read(String database) {
+        String sql = "SELECT * FROM " + database;
+        List<Map<Integer, List<Object>>> result = new ArrayList<>();
+        try (Connection conn = DBConnect.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            System.out.println(stmt);
             ResultSet res = stmt.executeQuery();
             ResultSetMetaData metaData = res.getMetaData();
-            columnCount = metaData.getColumnCount();
 
-            System.out.println("Selecione a coluna que deseja filtrar: " + columnCount);
-            for(int i = 1; i <= columnCount; i++){
-                String getColumnName = metaData.getColumnName(i);
-                String formatColumnName = getColumnName.substring(0, 1).toUpperCase() + getColumnName.substring(1);
-                System.out.println(i + " - " + formatColumnName);
-            }
-            System.out.println(columnCount + 1 + " - Todas");
-
-            int coluna = DataInput.IntegerInput(1, columnCount + 1);
-
-            if(coluna <= columnCount) {
-                System.out.println("Coluna: " + metaData.getColumnLabel(coluna));
-            }else {
-                StringBuilder colunas = new StringBuilder();
-                for(int i = 1; i <= columnCount; i++){
-                    String label = metaData.getColumnLabel(i).toUpperCase();
-                    colunas.append(String.format("%-10s", label));
-                }
-                colunas.append("\n");
-                System.out.println(colunas);
-            }
             while (res.next()) {
-                if(coluna <= columnCount){
-                    System.out.println(res.getObject(coluna).toString());
+                Map<Integer, List<Object>> map = new HashMap<>();
+                List<Object> list = new ArrayList<>();
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    int id = res.getInt(1);
+                    if(i > 1) list.add(res.getObject(i));
+                    map.put(id, list);
                 }
-                if(coluna == columnCount + 1){
-                    StringBuilder colunas = new StringBuilder();
-                    for(int i = 1; i <= columnCount; i++){
-                        String column = res.getObject(i).toString();
-                        colunas.append(String.format("%-10s", column));
-                    }
-                    System.out.println(colunas);
-                }
+                result.add(map);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Erroso: " + e.getMessage());
         }
+        return result;
     }
     public static void update(){
 

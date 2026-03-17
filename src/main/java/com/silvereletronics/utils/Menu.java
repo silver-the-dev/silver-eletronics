@@ -1,24 +1,27 @@
 package com.silvereletronics.utils;
 
+import com.silvereletronics.Componente;
 import com.silvereletronics.db.DBOperations;
 
 import java.util.List;
-import java.util.Map;
 
 public class Menu {
 
-    public static void inserir() {
-        DBOperations.create();
+    public static void inserir(String nome, int quantidade) {
+        DBOperations.create(new Componente(nome, quantidade));
     }
+
     public static void listarValores() {
-        List<Map<Integer, List<Object>>> list = DBOperations.read("componentes");
-        System.out.printf("%-5s %-15s %-5s\n", "ID", "NOME", "QUANTIDADE");
-        for(Map<Integer, List<Object>> map : list){
-            for (Map.Entry<Integer, List<Object>> entry : map.entrySet()) {
-                System.out.printf("%-5s %-15s %-5s\n", entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
-            }
+        List<Componente> list = DBOperations.read();
+        System.out.printf("%-5s %-35s %-5s\n", "ID", "NOME", "QUANTIDADE");
+        for(Componente componente : list) {
+            int id = componente.getId();
+            String nome = componente.getNome();
+            int quantidade = componente.getQuantidade();
+            System.out.printf("%-5s %-35s %-5s\n", id, nome, quantidade);
         }
     }
+
     public static void atualizar() {
         DBOperations.update();
     }
@@ -31,15 +34,15 @@ public class Menu {
         System.out.println("Selecione uma opção: ");
         System.out.println("1 - Listar.");
         System.out.println("2 - Inserir.");
-        System.out.println("3 - Atualizar.");
-        System.out.println("4 - Deletar.");
+        //System.out.println("3 - Atualizar.");
+        //System.out.println("4 - Deletar.");
 
         System.out.println("Opção: ");
-        int opcao = DataInput.IntegerInput();
+        int opcao = DataInput.IntegerInput(1,2);
         if (opcao == 1) {
-
+            listarValores();
         } else if (opcao == 2) {
-            inserir();
+            inserir("Resistor genérico", 123);
         } else if (opcao == 3) {
             atualizar();
         } else if (opcao == 4) {
